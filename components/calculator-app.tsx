@@ -47,6 +47,10 @@ export function CalculatorApp() {
     setCurrentPage("before");
   };
 
+  const handleLoadDemo = () => {
+    setCurrentPage("result");
+  };
+
   const handleReset = () => {
     reset();
     setCurrentPage("home");
@@ -75,6 +79,7 @@ export function CalculatorApp() {
           <TimelineOverviewPage 
             onStart={handleStartCalculation}
             onBack={() => setCurrentPage("persona-selection")}
+            onDemo={handleLoadDemo}
           />
         )}
         
@@ -123,6 +128,7 @@ export function CalculatorApp() {
           <ActionPlan 
             onBack={() => setCurrentPage("result")}
             onReset={handleReset}
+            onHome={handleReset}
           />
         )}
       </div>

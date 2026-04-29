@@ -51,6 +51,7 @@ export interface CalculatorState {
   updateBeforeData: (data: Partial<BeforeStageData>) => void;
   updateDuringData: (data: Partial<DuringStageData>) => void;
   updateAfterData: (data: Partial<AfterStageData>) => void;
+  loadSampleData: (before: BeforeStageData, during: DuringStageData, after: AfterStageData) => void;
   reset: () => void;
   
   // Calculated values
@@ -141,6 +142,13 @@ export const useCalculatorStore = create<CalculatorState>((set, get) => ({
   updateAfterData: (data) => set((state) => ({
     afterData: { ...state.afterData, ...data }
   })),
+
+  loadSampleData: (before, during, after) => set({
+    beforeData: before,
+    duringData: during,
+    afterData: after,
+    currentStep: 3,
+  }),
   
   reset: () => set({
     selectedCategory: null,

@@ -3,14 +3,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ArrowRight, Clock, Wallet, TrendingUp } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock, Wallet, TrendingUp, FlaskConical } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { skillInvestmentPersonas } from "@/lib/event-data";
 import { useCalculatorStore } from "@/lib/calculator-store";
+import { sampleScenarios } from "@/lib/sample-data";
 
 interface TimelineOverviewPageProps {
   onStart: () => void;
   onBack: () => void;
+  onDemo?: () => void;
 }
 
 const defaultTimeline = {
@@ -34,11 +36,18 @@ const stageLabels = [
   { label: "事後｜銜接期", question: "能不能接上收入？" },
 ];
 
-export function TimelineOverviewPage({ onStart, onBack }: TimelineOverviewPageProps) {
-  const { selectedPersona: selectedPersonaId } = useCalculatorStore();
+export function TimelineOverviewPage({ onStart, onBack, onDemo }: TimelineOverviewPageProps) {
+  const { selectedPersona: selectedPersonaId, loadSampleData } = useCalculatorStore();
 
   const persona = skillInvestmentPersonas.find((p) => p.id === selectedPersonaId);
   const timeline = persona?.timeline ?? defaultTimeline;
+  const sample = selectedPersonaId ? sampleScenarios[selectedPersonaId] : undefined;
+
+  const handleDemo = () => {
+    if (!sample) return;
+    loadSampleData(sample.before, sample.during, sample.after);
+    onDemo?.();
+  };
 
   const timelineCards = [
     { title: timeline.beforeTitle, content: timeline.before },
@@ -136,6 +145,31 @@ export function TimelineOverviewPage({ onStart, onBack }: TimelineOverviewPagePr
           );
         })}
       </div>
+
+      {/* Demo banner — only shown when sample data is available */}
+      {sample && (
+        <div className="rounded-xl border border-dashed border-primary/40 bg-primary/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex items-start gap-3 flex-1">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
+              <FlaskConical className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">想先看完整模擬結果？</p>
+              <p className="text-xs text-muted-foreground leading-snug mt-0.5">
+                以「{sample.description}」為範例，自動填入所有數字並直接跳至結果頁。
+              </p>
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="shrink-0 border-primary/40 text-primary hover:bg-primary/10"
+            onClick={handleDemo}
+          >
+            查看模擬結果
+          </Button>
+        </div>
+      )}
 
       {/* CTA */}
       <div className="flex justify-center">

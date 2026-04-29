@@ -12,13 +12,15 @@ import {
   TrendingUp,
   Calendar,
   Users,
-  Lightbulb
+  Lightbulb,
+  Home
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ActionPlanProps {
   onBack: () => void;
   onReset: () => void;
+  onHome: () => void;
 }
 
 interface ActionCard {
@@ -28,7 +30,7 @@ interface ActionCard {
   priority: "high" | "medium" | "low";
 }
 
-export function ActionPlan({ onBack, onReset }: ActionPlanProps) {
+export function ActionPlan({ onBack, onReset, onHome }: ActionPlanProps) {
   const { getOverallCalculations } = useCalculatorStore();
   const overall = getOverallCalculations();
   
@@ -176,6 +178,10 @@ export function ActionPlan({ onBack, onReset }: ActionPlanProps) {
         <Button variant="outline" onClick={onBack}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           返回結果頁
+        </Button>
+        <Button variant="outline" onClick={onHome}>
+          <Home className="mr-2 h-4 w-4" />
+          回到事件選擇
         </Button>
         <Button variant="secondary" className="flex-1">
           前往好理家在其他工具
